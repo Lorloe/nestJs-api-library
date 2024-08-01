@@ -61,6 +61,21 @@ export class UsersService {
     return compareSync(password, hash);
   }
 
+  // async updateUserById(id: string, updateUserDto: UpdateUserDto) {
+  //   const { email, password, name } = updateUserDto;
+  //   const hashPassword = this.getHashPassword(password);
+  //   const user = await this.userModel.findByIdAndUpdate(id, updateUserDto, {
+  //     email,
+  //     name,
+  //     password: hashPassword,
+  //     new: true,
+  //   });
+  //   if (!user) {
+  //     throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+  //   }
+  //   return user;
+  // }
+
   async updateUserById(id: string, updateUserDto: UpdateUserDto) {
     const user = await this.userModel.findByIdAndUpdate(id, updateUserDto, {
       new: true,

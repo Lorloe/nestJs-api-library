@@ -21,8 +21,8 @@ export class UpdateUserDto extends OmitType(CreateUserDto, [
   @MaxLength(100)
   readonly name: string;
 
-  @IsNotEmpty()
-  @IsString()
-  @MinLength(8)
-  readonly password: string;
+  // @IsNotEmpty()
+  // @IsString()
+  // @MinLength(8)
+  // readonly password: string;
 }

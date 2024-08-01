@@ -8,6 +8,7 @@ import mongoose from 'mongoose';
 import { Book } from './schemas/book.schema';
 import { Query } from 'express-serve-static-core';
 import { title } from 'process';
+import { User } from 'src/users/schemas/user.schema';
 
 @Injectable()
 export class BookService {
@@ -43,7 +44,8 @@ export class BookService {
     return book;
   }
 
-  async create(book: Book): Promise<Book> {
+  async create(book: Book, user: User): Promise<Book> {
+    const data = Object.assign(book, { user: user._id }); //luu id user vao quyen sach
     const res = await this.bookModel.create(book);
     return res;
   }
@@ -55,7 +57,7 @@ export class BookService {
   //     });
   //   }
 
-  async updateOneById(id: string, book: Book): Promise<Book> {
+  async updateOneById(id: string, book: Book, user: User): Promise<Book> {
     const isValidId = mongoose.isValidObjectId(id);
     if (!isValidId) {
       throw new BadRequestException(`Please enter correct Id`);
@@ -64,6 +66,7 @@ export class BookService {
       new: true,
       runValidators: true,
     });
+    const data = Object.assign(book, { updatedBy: user._id });
     if (!books) {
       throw new NotFoundException(`Book with ID ${id} not found`);
     }

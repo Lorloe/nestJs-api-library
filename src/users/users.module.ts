@@ -6,9 +6,11 @@ import { UserSchema } from './schemas/user.schema';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { JwtService } from '@nestjs/jwt';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   imports: [
+    AuthModule,
     MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
     ConfigModule,
   ],
