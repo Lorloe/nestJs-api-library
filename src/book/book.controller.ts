@@ -71,6 +71,7 @@ export class BookController {
     };
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Delete('deleteBook/:id')
   async delete(
     @Param('id')
@@ -83,6 +84,7 @@ export class BookController {
     };
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Delete('deleteAll')
   async deleteAll(): Promise<{ message: string }> {
     const deleteAllBook = await this.bookService.deleteAll();

@@ -57,20 +57,40 @@ export class BookService {
   //     });
   //   }
 
+  // async updateOneById(id: string, book: Book, user: User): Promise<Book> {
+  //   const isValidId = mongoose.isValidObjectId(id);
+  //   if (!isValidId) {
+  //     throw new BadRequestException(`Please enter correct Id`);
+  //   }
+  //   const books = await this.bookModel.findByIdAndUpdate(id, book, {
+  //     new: true,
+  //     runValidators: true,
+  //   });
+  //   const data = Object.assign(book, { updatedBy: user._id });
+  //   if (!books) {
+  //     throw new NotFoundException(`Book with ID ${id} not found`);
+  //   }
+  //   return books;
+  // }
+
   async updateOneById(id: string, book: Book, user: User): Promise<Book> {
     const isValidId = mongoose.isValidObjectId(id);
     if (!isValidId) {
-      throw new BadRequestException(`Please enter correct Id`);
+      throw new BadRequestException('Please enter a correct Id');
     }
-    const books = await this.bookModel.findByIdAndUpdate(id, book, {
-      new: true,
-      runValidators: true,
-    });
-    const data = Object.assign(book, { updatedBy: user._id });
+    // Lấy sách hiện tại
+    const books = await this.bookModel.findById(id);
     if (!books) {
       throw new NotFoundException(`Book with ID ${id} not found`);
     }
-    return books;
+    // Thêm trường updatedBy vào dữ liệu cập nhật
+    const data = Object.assign(book, { updatedBy: user._id });
+    // Cập nhật sách với dữ liệu mới
+    const updatedBook = await this.bookModel.findByIdAndUpdate(id, data, {
+      new: true,
+      runValidators: true,
+    });
+    return updatedBook;
   }
 
   async deleteOneById(id: string): Promise<Book> {
