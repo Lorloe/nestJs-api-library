@@ -9,6 +9,7 @@ import { Book } from './schemas/book.schema';
 import { Query } from 'express-serve-static-core';
 import { title } from 'process';
 import { User } from 'src/users/schemas/user.schema';
+import { Role } from '@/roles/roles.enum';
 
 @Injectable()
 export class BookService {
@@ -17,7 +18,11 @@ export class BookService {
     private bookModel: mongoose.Model<Book>,
   ) {}
 
-  async findAll(query: Query): Promise<Book[]> {
+  async findAll() {
+    return await this.bookModel.find({});
+  }
+
+  async findName(query: Query): Promise<Book[]> {
     const resPerPage = 2;
     const currentPage = Number(query.page) || 1;
     const skip = resPerPage * (currentPage - 1);
@@ -36,6 +41,14 @@ export class BookService {
     return books;
   }
 
+  // async findPagination(query): Promise<Book[]> {
+  //   const resPerPage = 2;
+  //   const currentPage = Number(query.page) || 1;
+  //   const skip = resPerPage * (currentPage - 1);
+  //   const books = await this.bookModel.limit(resPerPage).skip(skip);
+  //   return books;
+  // }
+
   async findOneById(id: string): Promise<Book | null> {
     const book = await this.bookModel.findById(id);
     if (!book) {
@@ -45,6 +58,16 @@ export class BookService {
   }
 
   async create(book: Book, user: User): Promise<Book> {
+    const allowedRoles = [
+      Role.SuperAdmin,
+      Role.RootAdmin,
+      Role.Admin,
+      Role.BookManager,
+    ];
+    const hasRole = user.role.some((role) => allowedRoles.includes(role));
+    if (!hasRole) {
+      throw new BadRequestException('You are not allowed to create a book');
+    }
     const data = Object.assign(book, { user: user._id }); //luu id user vao quyen sach
     const res = await this.bookModel.create(book);
     return res;
@@ -78,7 +101,7 @@ export class BookService {
     if (!isValidId) {
       throw new BadRequestException('Please enter a correct Id');
     }
-    // Lấy sách hiện tại
+    // Lấy sách hiện tại = search Id book
     const books = await this.bookModel.findById(id);
     if (!books) {
       throw new NotFoundException(`Book with ID ${id} not found`);

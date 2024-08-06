@@ -1,6 +1,11 @@
+import { Role } from 'src/roles/roles.enum';
 import {
+  ArrayNotEmpty,
+  IsArray,
   IsEmail,
+  IsEnum,
   IsNotEmpty,
+  IsOptional,
   IsString,
   MaxLength,
   MinLength,
@@ -21,4 +26,10 @@ export class CreateUserDto {
   @IsString()
   @MinLength(8)
   readonly password: string;
+
+  @IsArray()
+  @ArrayNotEmpty()
+  @IsOptional()
+  @IsEnum(Role, { each: true })
+  readonly roles?: Role[];
 }

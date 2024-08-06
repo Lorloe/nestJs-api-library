@@ -11,6 +11,7 @@ import { Model } from 'mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
 import { compareSync, genSaltSync, hashSync } from 'bcryptjs';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { Query } from 'express-serve-static-core';
 
 @Injectable()
 export class UsersService {
@@ -26,12 +27,13 @@ export class UsersService {
     return hash;
   };
   async createUser(createUserDto: CreateUserDto): Promise<User> {
-    const { email, password, name } = createUserDto;
+    const { email, password, name, roles } = createUserDto;
     const hashPassword = this.getHashPassword(password);
     const user = await this.userModel.create({
       email,
       name,
       password: hashPassword,
+      roles,
     });
     console.log(user);
     return this.userModel.create(user);
@@ -39,6 +41,19 @@ export class UsersService {
 
   async findAll() {
     return await this.userModel.find({});
+  }
+
+  async findName(query: Query): Promise<User[]> {
+    const keyword = query.keyword
+      ? {
+          name: {
+            $regex: query.keyword,
+            $options: 'i',
+          },
+        }
+      : {};
+    const user = this.userModel.find({ ...keyword });
+    return user;
   }
 
   async findOneById(id: string): Promise<User | null> {
@@ -49,13 +64,26 @@ export class UsersService {
     return user;
   }
 
-  async findOneByName(): Promise<{ name: string }[]> {
-    return await this.userModel.find({}, 'name').exec();
+  // async findOneByName(): Promise<{ name: string }[]> {
+  //   return await this.userModel.find({}, 'name').exec();
+  // }
+
+  async findEmail(query: Query): Promise<User[]> {
+    const keyword = query.keyword
+      ? {
+          email: {
+            $regex: query.keyword,
+            $options: 'i',
+          },
+        }
+      : {};
+    const user = this.userModel.find({ ...keyword });
+    return user;
   }
 
-  async findOneByEmail(): Promise<{ email: string }[]> {
-    return await this.userModel.find({}, 'email').exec();
-  }
+  // async findOneByEmail(): Promise<{ email: string }[]> {
+  //   return await this.userModel.find({}, 'email').exec();
+  // }
 
   isValidPassword(password: string, hash: string) {
     return compareSync(password, hash);

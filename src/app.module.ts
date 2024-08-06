@@ -8,6 +8,7 @@ import { AuthController } from './auth/auth.controller';
 import { AuthService } from './auth/auth.service';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { PasswordModule } from './password/password.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { UsersModule } from './users/users.module';
     BookModule,
     AuthModule,
     UsersModule,
+    PasswordModule,
   ],
   controllers: [AppController, AuthController],
   providers: [AppService],
