@@ -31,5 +31,5 @@ export class CreateUserDto {
   @ArrayNotEmpty()
   @IsOptional()
   @IsEnum(Role, { each: true })
-  readonly roles?: Role[];
+  readonly roles: Role[];
 }

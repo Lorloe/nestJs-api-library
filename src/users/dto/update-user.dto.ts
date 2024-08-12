@@ -7,12 +7,8 @@ import {
   IsString,
   MaxLength,
 } from 'class-validator';
-import { CreateUserDto } from './create-user.dto';
-import { OmitType } from '@nestjs/mapped-types';
 import { Role } from 'src/roles/roles.enum';
-export class UpdateUserDto extends OmitType(CreateUserDto, [
-  'password',
-] as const) {
+export class UpdateUserDto {
 
   @IsString()
   @MaxLength(100)
@@ -32,7 +28,7 @@ export class UpdateUserDto extends OmitType(CreateUserDto, [
 
   @IsArray()
   @ArrayNotEmpty()
-  @IsEnum(Role, { each: true })
+  @IsEnum(Role, { each: true, message: 'Invalid role' })
   @IsOptional()
-  readonly roles?: Role[];
+  roles?: Role[];
 }
