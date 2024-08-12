@@ -32,8 +32,8 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 # take note
-# User update(just update email and name, password has been change from can update to can not update because can not hash password after update)
-# Now you have to login take a token(bearer token) to create a book(will add this to another endpoint)
-# Save id user when you create a book
-# +1 idea: when you update a book, it's save id user into a book but do not overriding to the id user has been created a book before
+# Add role for every account
+# Every role have permission upto account belongs to every single mission
+# Update role have a problem when you update role for account role []
+# +1 idea: rootAdmin have permission to login into another account and use the role and permission of that's account
 
