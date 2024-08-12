@@ -36,4 +36,5 @@ $ npm run test:cov
 # Every role have permission upto account belongs to every single mission
 # Update role have a problem when you update role for account role []
 # +1 idea: rootAdmin have permission to login into another account and use the role and permission of that's account
+# 2 problem: First is about write Decorator @GetUser Second is about req.user, you need only userID not entire user
 
